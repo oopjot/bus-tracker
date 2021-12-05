@@ -39,6 +39,7 @@ type Vehicle struct {
   B float64
 }
 ```
+B jest kątem obrotu pojazdu
 
 ## Todo
 - przechować gdzieś i wysłać wiadomość od razu po połączeniu
