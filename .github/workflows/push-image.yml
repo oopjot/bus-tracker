@@ -1,0 +1,22 @@
+name: push-image
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  registry-login:
+    runs-on: ubuntu-latest
+    steps:
+      - name: login to Docker
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_LOGIN }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: chekout repo
+        uses: actions/checkout@v2
+      - name: build tag push
+        run: docker build -t $(git rev-parse HEAD) .
+        run: docker tag $(git rev-parse HEAD) oopjot/tracker:latest
+        run: docker push oopjot/tracker:latest
+
