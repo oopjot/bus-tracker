@@ -1,6 +1,6 @@
 package services
 
-type vehicle struct {
+type VehicleResponse struct {
 	DataGenerated string `json:"DataGenerated"`
 	Line string `json:"Line"`
 	Route string `json:"Route"`
@@ -16,9 +16,6 @@ type vehicle struct {
 
 type VehiclesResponse struct {
 	LastUpdate string `json:"LastUpdateData"`
-	Vehicles []vehicle `json:"Vehicles"`
+	Vehicles []VehicleResponse `json:"Vehicles"`
 }
 
-type Vehicle struct {
-	vehicle
-}

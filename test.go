@@ -2,31 +2,20 @@ package main
 
 import (
   "fmt"
-  "time"
 )
 
-func worker (channel chan string) {
-  fmt.Println("Working")
-  i := 0
-  for {
-    time.Sleep(time.Second)
-    channel <- fmt.Sprintf("iteracja %d", i)
-    i += 1
-  }
+type A struct {
+  F1 string
+  F2 string
 }
 
 func main() {
-  fmt.Println("Kurwa")
-  messages := make(chan string)
-
-  go worker(messages)
-  go func() {
-    for msg := range messages {
-      fmt.Println(msg)
-    }
-  }()
-
-  var a string
-  fmt.Scanf("itma", &a)
+  fmt.Println(":D")
+  var a [3]A
+  fmt.Println(len(a))
+  a[0] = A{"ab", "ba"}
+  a[1] = A{"cb", "bc"}
+  fmt.Println(a[2])
   fmt.Println(a)
+  fmt.Println(len(a))
 }
