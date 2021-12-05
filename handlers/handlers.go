@@ -5,7 +5,7 @@ import (
 	"strings"
 	"net/http"
 	"github.com/gorilla/websocket"
-	"github.com/Traffic-Map-Team/traffic-map-tracker/workers"
+	"github.com/Traffic-Map-Team/tracker/workers"
 )
 
 var upgrader = websocket.Upgrader{

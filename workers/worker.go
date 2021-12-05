@@ -4,7 +4,7 @@ import (
 	"sync"
 	"strings"
 	"github.com/gorilla/websocket"
-	"github.com/Traffic-Map-Team/traffic-map-tracker/vehicles"
+	"github.com/Traffic-Map-Team/tracker/vehicles"
 )
 
 type Worker struct {

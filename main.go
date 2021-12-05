@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"github.com/Traffic-Map-Team/traffic-map-tracker/vehicles"
-	"github.com/Traffic-Map-Team/traffic-map-tracker/workers"
-	"github.com/Traffic-Map-Team/traffic-map-tracker/handlers"
+	"github.com/Traffic-Map-Team/tracker/vehicles"
+	"github.com/Traffic-Map-Team/tracker/workers"
+	"github.com/Traffic-Map-Team/tracker/handlers"
 	"github.com/gorilla/mux"
 )
 
