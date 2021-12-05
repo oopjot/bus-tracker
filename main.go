@@ -23,5 +23,4 @@ func main() {
 	r.HandleFunc("/vehicles", handlers.VehiclesHandler(&workers))
 
 	log.Fatal(http.ListenAndServe(":8000", r))
-
 }
