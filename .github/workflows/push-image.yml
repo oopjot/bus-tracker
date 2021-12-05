@@ -15,8 +15,10 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: chekout repo
         uses: actions/checkout@v2
-      - name: build tag push
+      - name: build image
         run: docker build -t $(git rev-parse HEAD) .
+      - name: tag image
         run: docker tag $(git rev-parse HEAD) oopjot/tracker:latest
+      - name: push image
         run: docker push oopjot/tracker:latest
 
