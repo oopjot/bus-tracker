@@ -25,18 +25,18 @@ wscat -c "ws://0.0.0.0/vehicles?linex=10,100,111"
 Emitowana jest lista obiektów Vehicle w JSONie, zgodnie z filtrami
 ```go
 type Vehicle struct {
-	DataGenerated string `json:"DataGenerated"`
-	Line string `json:"Line"`
-	Route string `json:"Route"`
-	VehicleCode string `json:"VehicleCode"`
-	VehicleService string `json:"VehicleService"`
-	Id int `json:"VehicleId"`
-	Speed int `json:"Speed"`
-	Delay int `json:"Delay"`
-	Lat float64 `json:"Lat"`
-	Lon float64 `json:"Lon"`
-	GpsQuality int `json:"GPSQuality"`
-  B float64 `json:"b"`
+  DataGenerated string
+  Line string
+  Route string
+  VehicleCode string
+  VehicleService string
+  Id int
+  Speed: int 
+  Delay int
+  Lat float64
+  Lon float64
+  GpsQuality int
+  B float64
 }
 ```
 
