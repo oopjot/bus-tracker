@@ -1,32 +1,51 @@
-package services
+package vehicles
 
 import (
 	"log"
-	"net/http"
 	"encoding/json"
-	"time"
+	"net/http"
 	"crypto/md5"
-	"fmt"
-	"errors"
 	"math"
+	"errors"
+	"fmt"
+	"time"
 )
 
+type VehicleResponse struct {
+	DataGenerated string `json:"DataGenerated"`
+	Line string `json:"Line"`
+	Route string `json:"Route"`
+	VehicleCode string `json:"VehicleCode"`
+	VehicleService string `json:"VehicleService"`
+	Id int `json:"VehicleId"`
+	Speed int `json:"Speed"`
+	Delay int `json:"Delay"`
+	Lat float64 `json:"Lat"`
+	Lon float64 `json:"Lon"`
+	GpsQuality int `json:"GPSQuality"`
+}
 
+type VehiclesResponse struct {
+	LastUpdate string `json:"LastUpdateData"`
+	Vehicles []VehicleResponse `json:"Vehicles"`
+}
 
 type Vehicle struct {
 	VehicleResponse
 	B float64
 }
 
+// find vehicle by Id
 func (vr *VehiclesResponse) Find(id int) (VehicleResponse, error) {
 	for _, vehicle := range vr.Vehicles {
 		if vehicle.Id == id {
 			return vehicle, nil
 		}
 	}
-	return VehicleResponse{}, errors.New("Nie ma")
+	return VehicleResponse{}, errors.New(fmt.Sprintf("Vehicle not found: %d", id))
 }
 
+// fetch vehicles from public api
 func getAllVehicles(client *http.Client, target *VehiclesResponse) error {
 
 	r, err := client.Get("https://ckan2.multimediagdansk.pl/gpsPositions")
@@ -37,47 +56,41 @@ func getAllVehicles(client *http.Client, target *VehiclesResponse) error {
 	return json.NewDecoder(r.Body).Decode(&target)
 }
 
+// utilize fetch function
 func GetVehiclesData(client *http.Client, targetHash *string, target chan []Vehicle) error {
 	var stored [3]VehiclesResponse
 	for {
-		fmt.Println("------------------------------------------------------------")
 		var data VehiclesResponse
 		getAllVehicles(client, &data)
-		log.Printf("Liczba pojazdów: %d\n", len(data.Vehicles))
-		log.Printf("Ostatni updejt: %s\n", data.LastUpdate)
 		h := md5.New()
 		dataBytes := []byte(fmt.Sprintf("%v", data))
 		h.Write(dataBytes)
 
 		dataHashed := fmt.Sprintf("%x", h.Sum(nil))
-		log.Println("Zahaszowane: ", dataHashed)
 
-		if dataHashed == *targetHash {
-			log.Println("To samo, nic nie robię")
-		} else {
-			log.Println("Podmieniam")
+		if dataHashed != *targetHash {
 			targetHash = &dataHashed
-			log.Println("Wpisuję do kanału")
+			log.Println("New data: " + dataHashed + " at " + data.LastUpdate)
 			stored[2] = stored[1]
 			stored[1] = stored[0]
 			stored[0] = data
 			p := process(stored)
 			target <- p
 		}
-
 		time.Sleep(3 * time.Second)
 	}
 }
 
 
-
+// bearing angle helper func
 func getBearingAngle(latA, lonA, latB, lonB float64) float64 {
-	delta := latB - latA
-	X := math.Cos(lonA) * math.Sin(lonB) - math.Sin(lonA) * math.Cos(lonB) * math.Cos(delta)
-	Y := math.Cos(lonA) * math.Sin(lonB) - math.Sin(lonA) * math.Cos(lonB) * math.Cos(delta)
+	delta := lonB - lonA
+	X := math.Cos(latB) * math.Sin(delta)
+	Y := math.Cos(latA) * math.Sin(latB) - math.Sin(latA) * math.Cos(latB) * math.Cos(delta)
 	return math.Atan2(X, Y) * 57.29
 }
 
+// process fetched vehicles
 func process(data [3]VehiclesResponse) (result []Vehicle) {
 	latest := data[0]
 	prev := data[1]
@@ -90,8 +103,7 @@ func process(data [3]VehiclesResponse) (result []Vehicle) {
 			}
 		}
 		B := getBearingAngle(vp.Lat, vp.Lon, vl.Lat, vl.Lon)
-		v := Vehicle{
-		}
+		v := Vehicle{}
 		v.DataGenerated = vl.DataGenerated
 		v.Line = vl.Line
 		v.Route = vl.Route

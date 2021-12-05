@@ -1,4 +1,4 @@
-module github.com/Traffic-Map-Team/traffic-map-tracker
+module github.com/Traffic-Map-Team/tracker
 
 go 1.17
 
