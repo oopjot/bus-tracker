@@ -32,7 +32,7 @@ type VehiclesResponse struct {
 
 type Vehicle struct {
 	VehicleResponse
-	B float64
+	B float64 `json:"B"`
 }
 
 // find vehicle by Id
